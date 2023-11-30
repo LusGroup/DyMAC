@@ -54,7 +54,7 @@ namespace gr {
         m_samples_per_symbol = (uint32_t)(m_samp_rate * m_number_of_bins/ m_bw);
 
         m_upchirp.resize(m_samples_per_symbol);
-        m_double_upchirp.resize(2*m_samples_per_symbol);//自己定义的double_upchirp
+        m_double_upchirp.resize(2*m_samples_per_symbol);//double_upchirp
         m_downchirp.resize(m_samples_per_symbol);
         preamble_up.resize(n_up*m_samples_per_symbol);
         CFO_frac_correc.resize(m_samples_per_symbol);
@@ -62,7 +62,7 @@ namespace gr {
         symb_corr_all.resize(m_samples_per_symbol);
         symb_corr_doublechirp.resize(2*m_samples_per_symbol);
         in_down.resize(m_number_of_bins);
-        //in_double_down.resize(2*m_number_of_bins);
+        
         preamble_raw.resize(n_up*m_samples_per_symbol);
 
         build_ref_chirps(&m_upchirp[0], &m_downchirp[0], m_sf);
@@ -88,8 +88,7 @@ namespace gr {
         message_port_register_in(m_inSFPort);
         set_msg_handler(m_inSFPort,boost::bind(&snr_estimate_impl::setSF,this,_1));
 
-        // m_cad_port = pmt::mp("cadPort");
-        // message_port_register_out(m_cad_port);
+       
         message_port_register_out(pmt::mp("energyEfficiency"));
         message_port_register_out(pmt::mp("sfdDetect"));
 
@@ -535,9 +534,9 @@ float
          
            uint8_t tp = 10;
            float max_EE=0;
-           //PDR计算
+           //PDR Calculate
             pdr= calculate_PDR(current_snr,m_sf ,d_preamble_len,lh,lp);
-           //DR计算
+           //DR Calculate
             dr =calculate_DR(m_sf ,250e3);
             trans_efficiency=calculate_EE(dr,pdr,tp);
             switch(m_sf ){
@@ -585,12 +584,7 @@ float
                    break;
             }
 
-            // std::cout<<"EE is "<<trans_efficiency<<std::endl;
-            //  std::cout<<"DR is "<<dr<<std::endl;
-            //  std::cout<<"PDR is "<<pdr<<std::endl;
-            // matrix_update(0,0,trans_efficiency);
-            // dict=pmt::dict_add(dict,pmt::intern("logicalSf"),pmt::from_uint64(d_sf));
-            // dict=pmt::dict_add(dict,pmt::intern("logicalFrequency"),pmt::from_uint64(d_freqIndex));
+           
             dict=pmt::dict_add(dict,pmt::intern("logicalSf"),pmt::from_uint64(m_sf));
             dict=pmt::dict_add(dict,pmt::intern("logicalFrequency"),pmt::from_uint64(m_freqIndex));
             dict=pmt::dict_add(dict,pmt::intern("energyEfficiency"),pmt::from_float(trans_efficiency));
@@ -656,10 +650,7 @@ float
           }
           case SYNC:{
                
-                // pmt::pmt_t cad_info = pmt::make_dict();
-                // cad_info = pmt::dict_add(cad_info,pmt::intern("logicalSf"),pmt::from_uint64(m_sf));
-                // cad_info = pmt::dict_add(cad_info,pmt::intern("logicalFrequency"),pmt::from_uint64(m_freqIndex));
-                // message_port_pub(m_cad_port,cad_info); 
+            
               if(!cfo_sto_est){
                   estimate_CFO(&preamble_raw[m_number_of_bins-k_hat]);
                   estimate_STO();
@@ -672,8 +663,7 @@ float
               items_to_consume = usFactor*m_samples_per_symbol;
               //apply cfo correction
               volk_32fc_x2_multiply_32fc(&symb_corr[0],&in_down[0],&CFO_frac_correc[0],m_samples_per_symbol);
-             // std::cout<<"snr ："<<determine_snr(&symb_corr[0])<<std::endl;
-              //std::cout<<"sdr is working"<<std::endl;
+          
               
               bin_idx = get_symbol_val(&symb_corr[0], &m_downchirp[0]);
               
@@ -698,7 +688,7 @@ float
                         break;
                     }
                     case NET_ID2:{                        
-                        if (abs(bin_idx-(int32_t)m_sync_words[1])>1){ //netid不对，转回前导检测
+                        if (abs(bin_idx-(int32_t)m_sync_words[1])>1){ //Netid is wrong, switch back to leading detection
 
                             m_state = DETECT;
                             symbol_cnt = 1;

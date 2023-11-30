@@ -27,15 +27,15 @@ namespace gr
               m_sf(sf),
               m_freqIndex(freqIndex)
         {
-            //
+            
             m_LogicalStatePort = pmt::mp("LogicalState");
             m_timePort = pmt::mp("timePort");
-            //m_test=pmt::mp("test");
+      
             message_port_register_out(m_timePort);
             message_port_register_out(pmt::mp("msg"));
             message_port_register_out(m_LogicalStatePort);
-            //message_port_register_out(m_test);
-           //
+            
+           
         }
 
         /*
@@ -159,7 +159,7 @@ namespace gr
                     else
                         std::cout << RED << "CRC invalid" << RESET << std::endl
                                   << std::endl;
-                    //自己写的代码
+                 
                     time_t m_nowTime = time(0);
                     std::string timeMsg = ctime(&m_nowTime);
 
@@ -184,15 +184,15 @@ namespace gr
                         out[i] = in[i];
                 }
                 cnt++;
-                //自己写的代码
+           
                 time_t m_nowTime = time(0);
                 std::string timeMsg = ctime(&m_nowTime);
                 std::cout << "msg "<<cnt<<": " << message_str << std::endl;
-                //message_port_pub(pmt::intern("msg"), pmt::mp(message_str));
+             
                 message_port_pub(m_timePort,pmt::mp(timeMsg));
-                 //message_port_pub(m_test,pmt::mp(pmt::mp("hahaha!!")));
+              
                 broardcastChannelState();
-                //
+                
                 consume_each(m_payload_len);
                 return m_payload_len;
             }
