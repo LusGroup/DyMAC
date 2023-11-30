@@ -1,0 +1,38 @@
+id: lora_sdr_crc_verif
+label: crc verif
+category: '[Lora_sdr]'
+templates:
+  imports: import lora_sdr
+  make: lora_sdr.crc_verif(${frequency}, ${sf}, ${freqIndex})
+parameters:
+- id: frequency
+  label: Frequency
+  dtype: real
+- id: sf
+  label: Sf
+  dtype: raw
+- id: freqIndex
+  label: Freqindex
+  dtype: raw
+inputs:
+- label: in
+  domain: stream
+  dtype: byte
+outputs:
+- label: out
+  domain: stream
+  dtype: byte
+  optional: true
+- domain: message
+  id: msg
+  optional: true
+- domain: message
+  id: LogicalState
+  optional: true
+- domain: message
+  id: timePort
+  optional: true
+# - domain: message
+#   id: test
+#   optional: true
+file_format: 1

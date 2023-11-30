@@ -1,0 +1,70 @@
+id: lora_sdr_snr_estimate
+label: snr_estimate
+category: '[lora_sdr]'
+
+templates:
+  imports: import lora_sdr
+  make: lora_sdr.snr_estimate(${samp_rate}, ${bandwidth}, ${sf}, ${impl_head}, ${sync_word},
+    ${freqIndex})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters:
+- id: samp_rate
+  label: Samp_rate
+  dtype: float
+- id: bandwidth
+  label: Bandwidth
+  dtype: raw
+- id: sf
+  label: Sf
+  dtype: raw
+- id: impl_head
+  label: Impl_head
+  dtype: raw
+- id: sync_word
+  label: Sync_word
+  dtype: int_vector 
+  default: 0x12
+- id: freqIndex
+  label: Freqindex
+  dtype: raw
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+-   domain: stream
+    dtype: complex
+-   domain: message
+    id: frame_info
+    optional: true
+-   domain: message
+    id: inSF
+    optional: true
+
+outputs:
+-   domain: message
+    id: out
+    optional: true
+# -   domain: stream
+#     dtype: complex
+#     vlen: ${ 2**sf }
+#     optional: true
+-   domain: message
+    id: energyEfficiency
+    optional: true
+-   domain: message
+    id: sfdDetect
+    optional: true
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

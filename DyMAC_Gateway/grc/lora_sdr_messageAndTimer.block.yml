@@ -1,0 +1,18 @@
+id: lora_sdr_messageAndTimer
+label: messageAndTimer
+category: '[Lora_sdr]'
+templates:
+  imports: import lora_sdr
+  make: lora_sdr.messageAndTimer(${filename})
+parameters:
+- id: filename
+  label: Filename
+  dtype: string
+inputs:
+- id: mesPort
+  domain: message
+  optional: true
+- id: TimePort
+  domain: message
+  optional: true
+file_format: 1

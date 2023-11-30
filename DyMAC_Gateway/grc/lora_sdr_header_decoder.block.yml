@@ -1,0 +1,51 @@
+
+id: lora_sdr_header_decoder
+label: Header decoder
+category: '[LoRa_RX]'
+
+parameters:
+-   id: impl_head
+    label: Impl_head
+    dtype: bool
+-   id: cr
+    label: Cr
+    dtype: int
+    default: '3'
+-   id: pay_len
+    label: Pay_len
+    dtype: int
+    default: '255'
+-   id: has_crc
+    label: Has_crc
+    dtype: bool
+    default: 'False'
+
+inputs:
+-   domain: stream
+    dtype: byte
+
+outputs:
+-   domain: stream
+    dtype: byte
+-   domain: message
+    id: frame_info
+
+templates:
+    imports: import lora_sdr
+    make: lora_sdr.header_decoder(${impl_head}, ${cr}, ${pay_len}, ${has_crc})
+
+documentation: |-
+    Recovers information present in the header of a frame and send it to the frame_sync block. In implicit header mode, the values given as parameters will be transmitted.     
+        Parameters:
+            impl_head: indicate the usage of implicit header mode (explicit otherwise)
+            cr: coding rate(will be ignored in explicit header mode)        
+            pay_len: payload length in bytes(will be ignored in explicit header mode)        
+            has_crc: indicate the presence of a payload CRC(will be ignored in explicit header mode)
+        Input:        
+            in: stream of nibbles containing the header, payload (and CRC if used)        
+            new_frame: indicate the beginning of a new frame   
+        Output:        
+            out: stream of nibbles containing payload (and CRC)   
+            frame_info: message containing info of the header such as: coding rate, payload length, payload crc presence, explicit header checksum error  
+
+file_format: 1

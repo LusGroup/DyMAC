@@ -1,0 +1,38 @@
+
+id: lora_sdr_interleaver
+label: Interleaver
+category: '[LoRa_TX]'
+
+parameters:
+-   id: cr
+    label: Cr
+    dtype: int
+-   id: sf
+    label: Sf
+    dtype: int
+
+inputs:
+-   domain: stream
+    dtype: byte
+-   domain: message
+    id: inSF
+    optional: true
+outputs:
+-   domain: stream
+    dtype: int
+
+templates:
+    imports: import lora_sdr
+    make: lora_sdr.interleaver(${cr}, ${sf})
+
+documentation: |-
+    Interleaves multiple codewords together based on the spreading factor.
+        Parameters:
+            cr: coding rate
+            sf: spreading factor
+        Input:
+            in: stream of bytes containing a codeword each
+        Output:
+            out: stream of interleaved codewords as decimal values
+
+file_format: 1
